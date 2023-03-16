@@ -7,7 +7,7 @@ plugins {
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
-val tgbotapi_version = "7.0.0"
+//val tgbotapi_version = "7.0.0"
 
 repositories {
     mavenCentral()
@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation ("dev.inmo:tgbotapi:$tgbotapi_version")
+    implementation("dev.inmo:tgbotapi:7.0.0")
 }
 
 tasks.test {
