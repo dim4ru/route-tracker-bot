@@ -1,5 +1,3 @@
-@file:OptIn(RiskFeature::class)
-
 package main
 
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
@@ -27,6 +25,7 @@ import dev.inmo.tgbotapi.extensions.utils.extensions.sameMessage
 import dev.inmo.tgbotapi.extensions.utils.formatting.linkMarkdownV2
 import dev.inmo.tgbotapi.extensions.utils.formatting.textMentionMarkdownV2
 import dev.inmo.tgbotapi.extensions.utils.ifFromChannelGroupContentMessage
+import dev.inmo.tgbotapi.extensions.utils.liveLocationOrThrow
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.dataButton
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.flatInlineKeyboard
 import dev.inmo.tgbotapi.requests.edit.media.editMessageMediaMethod
@@ -57,6 +56,9 @@ import kotlinx.coroutines.flow.flow
 
 const val TOKEN = "6043309402:AAGwbvNXC6g_ulQbis1fTGglWpLHAkMENWU"
 val bot = telegramBot(TOKEN)
+var locations = listOf<Pair<Double, Double>>()
+
+@RiskFeature
 suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         println(getMe())
@@ -65,25 +67,33 @@ suspend fun main() {
             reply(it, "Привет, я могу следить за тобой, но пока что эти данные никак не сохраняются.")
         }
         onLiveLocation {
-            reply(it, "Вижу тебя: ${it.location!!.latitude}, ${it.location!!.longitude}")
-            startRouteRecording()
-            //println()
+            val coordinates = Pair(it.location!!.latitude, it.location!!.longitude)
+            reply(it, "Вижу тебя: $coordinates")
+            saveLocation(coordinates)
         }
         onEditedLocation {
-            reply(it, "Вижу обновление: ${it.location!!.latitude}, ${it.location!!.longitude}")
+            val coordinates = Pair(it.location!!.latitude, it.location!!.longitude)
+            reply(it, "Вижу тебя: $coordinates")
+            if (!locationExpired(it, coordinates)) {
+                saveLocation(coordinates)
+            } else {
+                viewResults()
+            }
         }
     }.join()
 }
 
-fun startRouteRecording(){
+fun locationExpired(message: Message, coordinates: Pair<Double, Double>): Boolean {
+    // проверка истечения трансляции
+    return false
+}
+
+fun saveLocation(coordinates: Pair<Double, Double>) {
+    locations = locations + coordinates
+}
+
+fun viewResults() {
 
 }
 
-/**
- *
- *
- * handleLiveLocation()
- * Обновление геопозиции = изменение сообщения
- * Нужно проверять полученное сообщение на обновления
- * Если есть обновление – записывать новое значение
- */
+//liveLocationOrThrow()
