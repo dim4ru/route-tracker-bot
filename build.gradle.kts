@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    id("io.ktor.plugin") version "2.2.4"
     kotlin("jvm") version "1.7.10"
     application
 }
@@ -28,4 +29,9 @@ tasks.withType<KotlinCompile> {
 
 application {
     mainClass.set("MainKt")
+}
+ktor {
+    fatJar {
+        archiveFileName.set("rtb.jar")
+    }
 }

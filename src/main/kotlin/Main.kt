@@ -1,5 +1,3 @@
-package main
-
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.send.reply
 import dev.inmo.tgbotapi.extensions.api.telegramBot
@@ -74,7 +72,7 @@ suspend fun main() {
         onEditedLocation {
             val coordinates = Pair(it.location!!.latitude, it.location!!.longitude)
             reply(it, "Вижу тебя: $coordinates")
-            if (!locationExpired(it, coordinates)) {
+            if (checkLocation(it.location as LiveLocation)) {
                 saveLocation(coordinates)
             } else {
                 viewResults()
@@ -83,13 +81,15 @@ suspend fun main() {
     }.join()
 }
 
-fun locationExpired(message: Message, coordinates: Pair<Double, Double>): Boolean {
-    // проверка истечения трансляции
-    return false
+fun checkLocation(location: LiveLocation): Boolean {
+    println(location.livePeriod)
+    // нужно высчитывать livePeriod – time
+    return true
 }
 
 fun saveLocation(coordinates: Pair<Double, Double>) {
     locations = locations + coordinates
+    println(locations)
 }
 
 fun viewResults() {
