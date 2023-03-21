@@ -1,11 +1,11 @@
+@file:OptIn(RiskFeature::class)
+
 package main
 
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.send.reply
 import dev.inmo.tgbotapi.extensions.api.telegramBot
 import dev.inmo.tgbotapi.extensions.behaviour_builder.buildBehaviourWithLongPolling
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onCommand
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onLiveLocation
 import dev.inmo.tgbotapi.extensions.api.send.*
 import dev.inmo.tgbotapi.extensions.api.startLiveLocation
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.startGettingOfUpdatesByLongPolling
@@ -21,8 +21,7 @@ import dev.inmo.tgbotapi.extensions.behaviour_builder.expectations.waitMessageDa
 import dev.inmo.tgbotapi.extensions.behaviour_builder.oneOf
 import dev.inmo.tgbotapi.extensions.behaviour_builder.parallel
 import dev.inmo.tgbotapi.extensions.behaviour_builder.telegramBotWithBehaviourAndLongPolling
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onCommand
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onContentMessage
+import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.*
 import dev.inmo.tgbotapi.extensions.utils.extensions.raw.location
 import dev.inmo.tgbotapi.extensions.utils.extensions.sameMessage
 import dev.inmo.tgbotapi.extensions.utils.formatting.linkMarkdownV2
@@ -47,6 +46,7 @@ import dev.inmo.tgbotapi.types.message.content.LiveLocationContent
 import dev.inmo.tgbotapi.types.message.content.LiveLocationMessage
 import dev.inmo.tgbotapi.types.message.content.LocationContent
 import dev.inmo.tgbotapi.utils.PreviewFeature
+import dev.inmo.tgbotapi.utils.RiskFeature
 import dev.inmo.tgbotapi.utils.extensions.escapeMarkdownV2Common
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.FlowCollector
@@ -62,12 +62,15 @@ suspend fun main() {
         println(getMe())
 
         onCommand("start") {
-            reply(it, "Привет, скоро я смогу следить за тобой, но пока могу только сделать вид. Отправь трансляцию геопозиции для проверки.")
+            reply(it, "Привет, я могу следить за тобой, но пока что эти данные никак не сохраняются.")
         }
         onLiveLocation {
-            reply(it, "Вижу тебя!: ${it.location!!.latitude}, ${it.location!!.longitude}")
+            reply(it, "Вижу тебя: ${it.location!!.latitude}, ${it.location!!.longitude}")
             startRouteRecording()
             //println()
+        }
+        onEditedLocation {
+            reply(it, "Вижу обновление: ${it.location!!.latitude}, ${it.location!!.longitude}")
         }
     }.join()
 }
