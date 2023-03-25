@@ -1,0 +1,1 @@
+class LiveLocationExpired (message: String = "Истекло время трансляции геопозиции"): Exception(message)

@@ -1,3 +1,5 @@
+@file:OptIn(RiskFeature::class)
+
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.send.reply
 import dev.inmo.tgbotapi.extensions.api.telegramBot
@@ -26,6 +28,7 @@ import dev.inmo.tgbotapi.extensions.utils.ifFromChannelGroupContentMessage
 import dev.inmo.tgbotapi.extensions.utils.liveLocationOrThrow
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.dataButton
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.flatInlineKeyboard
+import dev.inmo.tgbotapi.requests.GetUpdates
 import dev.inmo.tgbotapi.requests.edit.media.editMessageMediaMethod
 import dev.inmo.tgbotapi.types.chat.*
 import dev.inmo.tgbotapi.types.chat.GroupChat
@@ -51,12 +54,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 const val TOKEN = "6043309402:AAGwbvNXC6g_ulQbis1fTGglWpLHAkMENWU"
 val bot = telegramBot(TOKEN)
 var locations = listOf<Pair<Double, Double>>()
 
-@RiskFeature
 suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         println(getMe())
@@ -64,36 +70,28 @@ suspend fun main() {
         onCommand("start") {
             reply(it, "Привет, я могу следить за тобой, но пока что эти данные никак не сохраняются.")
         }
+        onStaticLocation {
+            finishTracking()
+        }
         onLiveLocation {
-            val coordinates = Pair(it.location!!.latitude, it.location!!.longitude)
-            reply(it, "Вижу тебя: $coordinates")
-            saveLocation(coordinates)
+            saveLocation(it.location as LiveLocation, getCurrentTime())
         }
         onEditedLocation {
-            val coordinates = Pair(it.location!!.latitude, it.location!!.longitude)
-            reply(it, "Вижу тебя: $coordinates")
-            if (checkLocation(it.location as LiveLocation)) {
-                saveLocation(coordinates)
-            } else {
-                viewResults()
-            }
+            saveLocation(it.location as LiveLocation, getCurrentTime())
         }
     }.join()
 }
 
-fun checkLocation(location: LiveLocation): Boolean {
-    println(location.livePeriod)
-    // нужно высчитывать livePeriod – time
-    return true
+fun getCurrentTime(): String {
+    val currentDateTime = LocalDateTime.now()
+    val isoDateTime = currentDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    return isoDateTime!!
 }
 
-fun saveLocation(coordinates: Pair<Double, Double>) {
-    locations = locations + coordinates
-    println(locations)
+fun saveLocation(location: LiveLocation, time: String) {
+    println(time + " ${location.longitude}, ${location.latitude} (${location.livePeriod})")
 }
 
-fun viewResults() {
-
+fun finishTracking() {
+    println("tracking finished")
 }
-
-//liveLocationOrThrow()
