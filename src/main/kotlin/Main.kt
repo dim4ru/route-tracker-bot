@@ -1,5 +1,6 @@
 @file:OptIn(RiskFeature::class)
 
+import dev.inmo.micro_utils.coroutines.subscribe
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.send.reply
 import dev.inmo.tgbotapi.extensions.api.telegramBot
@@ -30,6 +31,7 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.dataButton
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.flatInlineKeyboard
 import dev.inmo.tgbotapi.requests.GetUpdates
 import dev.inmo.tgbotapi.requests.edit.media.editMessageMediaMethod
+import dev.inmo.tgbotapi.types.Seconds
 import dev.inmo.tgbotapi.types.chat.*
 import dev.inmo.tgbotapi.types.chat.GroupChat
 import dev.inmo.tgbotapi.types.chat.PrivateChat
@@ -58,11 +60,12 @@ import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.time.Instant
+
 
 const val TOKEN = "6043309402:AAGwbvNXC6g_ulQbis1fTGglWpLHAkMENWU"
 val bot = telegramBot(TOKEN)
-var locations = listOf<Pair<Double, Double>>()
-
+var startTime: String = ""
 suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         println(getMe())
@@ -70,17 +73,29 @@ suspend fun main() {
         onCommand("start") {
             reply(it, "Привет, я могу следить за тобой, но пока что эти данные никак не сохраняются.")
         }
+        onLiveLocation {
+            startTime = getCurrentTime()    // лучше DateTime -> ISO-8601
+            saveLocation(it.location as LiveLocation)
+        }
+        onEditedLocation {
+            val liveLocation = it.location as LiveLocation
+            saveLocation(liveLocation)
+        }
         onStaticLocation {
             finishTracking()
         }
-        onLiveLocation {
-            saveLocation(it.location as LiveLocation, getCurrentTime())
-        }
-        onEditedLocation {
-            saveLocation(it.location as LiveLocation, getCurrentTime())
-        }
+        allUpdatesFlow.subscribe (this) { println(it) }
     }.join()
+
 }
+
+/*fun fromISOToSeconds(time: String): Long {
+    return Instant.parse(String.toString()).epochSecond
+}
+
+fun isLiveLocationExpired(livePeriod: Seconds): Boolean {
+    return fromISOToSeconds(getCurrentTime()) - fromISOToSeconds(startTime) < livePeriod
+}*/
 
 fun getCurrentTime(): String {
     val currentDateTime = LocalDateTime.now()
@@ -88,8 +103,8 @@ fun getCurrentTime(): String {
     return isoDateTime!!
 }
 
-fun saveLocation(location: LiveLocation, time: String) {
-    println(time + " ${location.longitude}, ${location.latitude} (${location.livePeriod})")
+fun saveLocation(location: LiveLocation) {
+    println(getCurrentTime() + " ${location.longitude}, ${location.latitude} (${location.livePeriod})")
 }
 
 fun finishTracking() {
