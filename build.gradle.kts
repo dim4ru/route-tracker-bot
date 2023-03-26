@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("dev.inmo:tgbotapi:7.0.0")
+    implementation("dev.inmo:tgbotapi:7.0.1")
 }
 
 tasks.test {
