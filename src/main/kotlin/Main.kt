@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
+import java.net.URLEncoder
 
 
 const val TOKEN = "6043309402:AAGwbvNXC6g_ulQbis1fTGglWpLHAkMENWU"
@@ -39,6 +40,7 @@ suspend fun main() {
         onLiveLocation {
             val lat = it.location!!.latitude
             val long = it.location!!.longitude
+            println("Tracking started")
             saveLocation(lat, long)
         }
         // On live location update and ending (expiration and stop by user)
@@ -49,11 +51,14 @@ suspend fun main() {
             if (it.content !is StaticLocationContent) {
                 saveLocation(lat, long)
             } else {
-                finishTracking()
+                bot.sendPhoto(
+                    IdChatIdentifier(it.chat.id.chatId),
+                    InputFile.fromUrl(getRouteMapURL())
+                )
             }
         }
 
-        allUpdatesFlow.subscribe(this) { println(it) }
+        //allUpdatesFlow.subscribe(this) { println(it) }
     }.join()
 
 }
@@ -66,9 +71,12 @@ fun getCurrentISOTime(): String {
 
 fun saveLocation(lat: Double, long: Double) {
     geoPoints.add(listOf(long, lat)) // Order is inverse becsuse 2gis API requires coordinate in format longitude, latitude
+    println("Added: ${listOf(long, lat)}")
 }
 
-fun finishTracking() {
+fun getRouteMapURL(): String {
     val json = kotlinx.serialization.json.Json.encodeToString(GeoJSON("LineString", geoPoints))
-    println(json)
+    val encodedURL = "https://static.maps.2gis.com/1.0?s=880x450&z=&g=${URLEncoder.encode(json, "UTF-8")}"
+    println("Map URL: $encodedURL")
+    return encodedURL
 }
