@@ -9,7 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.1.5 Bot registers end of Live Location sharing (expiration and stop by user)">
+    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.2.0 2GIS API demo, adding kotlinx-serialization dependency">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/GeoJSON.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/GeoPoint.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
@@ -98,7 +101,8 @@
       <updated>1678985036731</updated>
       <workItem from="1678985038713" duration="3897000" />
       <workItem from="1679748201017" duration="25796000" />
-      <workItem from="1680022521381" duration="4918000" />
+      <workItem from="1680022521381" duration="5882000" />
+      <workItem from="1680097167508" duration="4061000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1 TelegramBotAPI dependency added">
       <created>1678985102670</created>
@@ -149,7 +153,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679813904395</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="0.2.0 2GIS API demo, adding kotlinx-serialization dependency">
+      <created>1680028162968</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1680028162968</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,6 +187,7 @@
     <MESSAGE value="0.1.3 added time logging, refactoring" />
     <MESSAGE value="0.1.4 onStaticLocation doen't work" />
     <MESSAGE value="0.1.5 Bot registers end of Live Location sharing (expiration and stop by user)" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.1.5 Bot registers end of Live Location sharing (expiration and stop by user)" />
+    <MESSAGE value="0.2.0 2GIS API demo, adding kotlinx-serialization dependency" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.2.0 2GIS API demo, adding kotlinx-serialization dependency" />
   </component>
 </project>

@@ -16,13 +16,18 @@ import dev.inmo.tgbotapi.types.IdChatIdentifier
 import dev.inmo.tgbotapi.types.location.LiveLocation
 import dev.inmo.tgbotapi.types.message.content.StaticLocationContent
 import dev.inmo.tgbotapi.utils.RiskFeature
+import io.ktor.http.ContentType.Application.Json
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 
 
 const val TOKEN = "6043309402:AAGwbvNXC6g_ulQbis1fTGglWpLHAkMENWU"
 val bot = telegramBot(TOKEN)
-var startTime: String = ""
+var geoPoints: MutableList<List<Double>> = mutableListOf(listOf())
 suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         println(getMe())
@@ -30,29 +35,36 @@ suspend fun main() {
         onCommand("start") {
             reply(it, "Привет, я могу следить за тобой! Отправь мне трансляцию геопозиции.")
         }
+        // On live location start
         onLiveLocation {
-            startTime = getCurrentISOTime()    // лучше DateTime -> ISO-8601
-            saveLocation(it.location as LiveLocation)
+            val lat = it.location!!.latitude
+            val long = it.location!!.longitude
+            saveLocation(lat, long)
         }
-        onEditedLocation {
-            val liveLocation = it.location as LiveLocation
-            saveLocation(liveLocation)
-        }
+        // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
             val lat = it.location!!.latitude
             val long = it.location!!.longitude
-            if (it.content is StaticLocationContent) {
+            // If life location is active
+            if (it.content !is StaticLocationContent) {
+                reply(it, "$lat,$long")
+                saveLocation(lat, long)
+                bot.sendPhoto(
+                    IdChatIdentifier(it.chat.id.chatId),
+                    InputFile.fromUrl("https://static.maps.2gis.com/1.0?s=1200x1200@2x&pt=$lat,$long~n:1&pt=$lat,$long~k:c~n:2\n")
+                )
+            } else {
                 finishTracking()
             }
-            reply(it, "$lat,$long")
-            bot.sendPhoto(
-                IdChatIdentifier(it.chat.id.chatId),
-                InputFile.fromUrl("https://static.maps.2gis.com/1.0?s=1200x1200@2x&pt=$lat,$long~n:1&pt=$lat,$long~k:c~n:2\n")
-            )
         }
-        allUpdatesFlow.subscribe (this) { println(it) }
+
+        allUpdatesFlow.subscribe(this) { println(it) }
     }.join()
 
+}
+
+fun toGeoJSON(location: LiveLocation) {
+    //val json = Json.encodeToString(location)
 }
 
 fun getCurrentISOTime(): String {
@@ -61,10 +73,13 @@ fun getCurrentISOTime(): String {
     return isoDateTime!!
 }
 
-fun saveLocation(location: LiveLocation) {
-    println(getCurrentISOTime() + " ${location.longitude}, ${location.latitude}")
+fun saveLocation(lat: Double, long: Double) {
+    //println(getCurrentISOTime() + " ${location.longitude}, ${location.latitude}")
+    //println(arrayListOf(lat, long))
+    geoPoints.add(listOf(lat, long))
 }
 
 fun finishTracking() {
     println("tracking finished")
+    //val json = Json.encodeToString(GeoJSON(coordinates = geoPoints))
 }
