@@ -65,7 +65,7 @@ fun getCurrentISOTime(): String {
 }
 
 fun saveLocation(lat: Double, long: Double) {
-    geoPoints.add(listOf(lat, long))
+    geoPoints.add(listOf(long, lat)) // Order is inverse becsuse 2gis API requires coordinate in format longitude, latitude
 }
 
 fun finishTracking() {
