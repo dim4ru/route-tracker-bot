@@ -27,7 +27,7 @@ import kotlinx.serialization.encodeToString
 
 const val TOKEN = "6043309402:AAGwbvNXC6g_ulQbis1fTGglWpLHAkMENWU"
 val bot = telegramBot(TOKEN)
-var geoPoints: MutableList<List<Double>> = mutableListOf(listOf())
+var geoPoints: MutableList<List<Double>> = mutableListOf()
 suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         println(getMe())
@@ -47,12 +47,7 @@ suspend fun main() {
             val long = it.location!!.longitude
             // If life location is active
             if (it.content !is StaticLocationContent) {
-                reply(it, "$lat,$long")
                 saveLocation(lat, long)
-                bot.sendPhoto(
-                    IdChatIdentifier(it.chat.id.chatId),
-                    InputFile.fromUrl("https://static.maps.2gis.com/1.0?s=1200x1200@2x&pt=$lat,$long~n:1&pt=$lat,$long~k:c~n:2\n")
-                )
             } else {
                 finishTracking()
             }
@@ -63,10 +58,6 @@ suspend fun main() {
 
 }
 
-fun toGeoJSON(location: LiveLocation) {
-    //val json = Json.encodeToString(location)
-}
-
 fun getCurrentISOTime(): String {
     val currentDateTime = LocalDateTime.now()
     val isoDateTime = currentDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
@@ -74,12 +65,10 @@ fun getCurrentISOTime(): String {
 }
 
 fun saveLocation(lat: Double, long: Double) {
-    //println(getCurrentISOTime() + " ${location.longitude}, ${location.latitude}")
-    //println(arrayListOf(lat, long))
     geoPoints.add(listOf(lat, long))
 }
 
 fun finishTracking() {
-    println("tracking finished")
-    //val json = Json.encodeToString(GeoJSON(coordinates = geoPoints))
+    val json = kotlinx.serialization.json.Json.encodeToString(GeoJSON("LineString", geoPoints))
+    println(json)
 }
