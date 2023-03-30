@@ -1,6 +1,7 @@
 @file:OptIn(RiskFeature::class)
 
 import dev.inmo.micro_utils.coroutines.subscribe
+import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.send.media.sendPhoto
 import dev.inmo.tgbotapi.extensions.api.send.reply
@@ -23,14 +24,23 @@ import java.time.format.DateTimeFormatter
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
+import java.io.FileInputStream
+import java.io.InputStream
 import java.net.URLEncoder
+import java.util.*
 
-
-const val TOKEN = "6043309402:AAGwbvNXC6g_ulQbis1fTGglWpLHAkMENWU"
+fun readTelegramBotToken(): String {
+    val inputStream: InputStream = FileInputStream("config.properties")
+    val prop = Properties()
+    prop.load(inputStream)
+    return prop.getProperty("telegram.bot.token")
+}
+val TOKEN = readTelegramBotToken()
 val bot = telegramBot(TOKEN)
-var geoPoints: MutableList<List<Double>> = mutableListOf()
+
 suspend fun main() {
     bot.buildBehaviourWithLongPolling {
+        val geoPoints: MutableList<List<Double>> = mutableListOf() // long, lat
         println(getMe())
 
         onCommand("start") {
@@ -41,7 +51,7 @@ suspend fun main() {
             val lat = it.location!!.latitude
             val long = it.location!!.longitude
             println("Tracking started")
-            saveLocation(lat, long)
+            saveLocation(geoPoints, lat, long)
         }
         // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
@@ -49,11 +59,11 @@ suspend fun main() {
             val long = it.location!!.longitude
             // If life location is active
             if (it.content !is StaticLocationContent) {
-                saveLocation(lat, long)
+                saveLocation(geoPoints, lat, long)
             } else {
                 bot.sendPhoto(
                     IdChatIdentifier(it.chat.id.chatId),
-                    InputFile.fromUrl(getRouteMapURL())
+                    InputFile.fromUrl(getRouteMapURL(geoPoints))
                 )
             }
         }
@@ -69,12 +79,17 @@ fun getCurrentISOTime(): String {
     return isoDateTime!!
 }
 
-fun saveLocation(lat: Double, long: Double) {
-    geoPoints.add(listOf(long, lat)) // Order is inverse becsuse 2gis API requires coordinate in format longitude, latitude
+fun saveLocation(geoPoints: MutableList<List<Double>>, lat: Double, long: Double) {
+    geoPoints.add(
+        listOf(
+            long,
+            lat
+        )
+    ) // Order is inverse becsuse 2gis API requires coordinates in format longitude, latitude
     println("Added: ${listOf(long, lat)}")
 }
 
-fun getRouteMapURL(): String {
+fun getRouteMapURL(geoPoints: MutableList<List<Double>>): String {
     val json = kotlinx.serialization.json.Json.encodeToString(GeoJSON("LineString", geoPoints))
     val encodedURL = "https://static.maps.2gis.com/1.0?s=880x450&z=&g=${URLEncoder.encode(json, "UTF-8")}"
     println("Map URL: $encodedURL")
