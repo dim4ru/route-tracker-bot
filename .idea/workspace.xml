@@ -9,9 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.2.3 Coordinates are serialized in the format required by the 2gis API (long,lat)">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.2.5 bot token hidden">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Haversine.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/getDistanceTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/getRouteDistanceTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,11 +76,86 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.26765376&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Kotlin.MainKt">
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MainKt" />
       <module name="route-tracker-bot.main" />
       <shortenClasspath name="NONE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GetRouteDistanceTest: Summary route distance" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
+      <module name="route-tracker-bot.test" />
+      <option name="jrePath" value="" />
+      <option name="jrePathEnabled" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$MODULE_WORKING_DIR$" />
+      <option name="programParameters" value="" />
+      <option name="specName" value="GetRouteDistanceTest" />
+      <option name="testPath" value="Summary route distance" />
+      <option name="packageName" value="" />
+      <option name="vmparams" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GetRouteDistanceTest: Total route distance" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
+      <module name="route-tracker-bot.test" />
+      <option name="jrePath" value="" />
+      <option name="jrePathEnabled" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$MODULE_WORKING_DIR$" />
+      <option name="programParameters" value="" />
+      <option name="specName" value="GetRouteDistanceTest" />
+      <option name="testPath" value="Total route distance" />
+      <option name="packageName" value="" />
+      <option name="vmparams" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="getDistanceTest: Distance between two points calculated with the haversine" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
+      <module name="route-tracker-bot.test" />
+      <option name="jrePath" value="" />
+      <option name="jrePathEnabled" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$MODULE_WORKING_DIR$" />
+      <option name="programParameters" value="" />
+      <option name="specName" value="getDistanceTest" />
+      <option name="testPath" value="Distance between two points calculated with the haversine" />
+      <option name="packageName" value="" />
+      <option name="vmparams" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="getDistanceTest: Distance between two points via haversine" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
+      <module name="route-tracker-bot.test" />
+      <option name="jrePath" value="" />
+      <option name="jrePathEnabled" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$MODULE_WORKING_DIR$" />
+      <option name="programParameters" value="" />
+      <option name="specName" value="getDistanceTest" />
+      <option name="testPath" value="Distance between two points via haversine" />
+      <option name="packageName" value="" />
+      <option name="vmparams" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="getRouteDistanceTest: Summary route distance test" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
+      <module name="route-tracker-bot.test" />
+      <option name="jrePath" value="" />
+      <option name="jrePathEnabled" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$MODULE_WORKING_DIR$" />
+      <option name="programParameters" value="" />
+      <option name="specName" value="getRouteDistanceTest" />
+      <option name="testPath" value="Summary route distance test" />
+      <option name="packageName" value="" />
+      <option name="vmparams" value="" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -100,6 +178,8 @@
       <workItem from="1679748201017" duration="25796000" />
       <workItem from="1680022521381" duration="5882000" />
       <workItem from="1680097167508" duration="12339000" />
+      <workItem from="1680238000944" duration="229000" />
+      <workItem from="1680278385341" duration="8038000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1 TelegramBotAPI dependency added">
       <created>1678985102670</created>
@@ -178,7 +258,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680108783034</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="0.2.5 bot token hidden">
+      <created>1680183079191</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1680183079191</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,6 +296,7 @@
     <MESSAGE value="0.2.1 added GeoJSON class for futher serialization, removed OnEditedLocation handler, added kotlinx serialization plugin &amp; dependency" />
     <MESSAGE value="0.2.2 GeoJSON serialization, but only coordinates are serialized, &quot;LineString&quot; is ignored" />
     <MESSAGE value="0.2.3 Coordinates are serialized in the format required by the 2gis API (long,lat)" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.2.3 Coordinates are serialized in the format required by the 2gis API (long,lat)" />
+    <MESSAGE value="0.2.5 bot token hidden" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.2.5 bot token hidden" />
   </component>
 </project>

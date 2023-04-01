@@ -31,10 +31,10 @@ import java.util.*
 
 fun readTelegramBotToken(): String {
     val inputStream: InputStream = FileInputStream("config.properties")
-    val prop = Properties()
-    prop.load(inputStream)
+    val prop = Properties().apply { load(inputStream) }
     return prop.getProperty("telegram.bot.token")
 }
+
 val TOKEN = readTelegramBotToken()
 val bot = telegramBot(TOKEN)
 
@@ -65,6 +65,8 @@ suspend fun main() {
                     IdChatIdentifier(it.chat.id.chatId),
                     InputFile.fromUrl(getRouteMapURL(geoPoints))
                 )
+                reply(it, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км")
+                geoPoints.clear()
             }
         }
 
@@ -86,7 +88,7 @@ fun saveLocation(geoPoints: MutableList<List<Double>>, lat: Double, long: Double
             lat
         )
     ) // Order is inverse becsuse 2gis API requires coordinates in format longitude, latitude
-    println("Added: ${listOf(long, lat)}")
+    println("Added: ${listOf(long, lat)} (${geoPoints.count()})")
 }
 
 fun getRouteMapURL(geoPoints: MutableList<List<Double>>): String {
@@ -94,4 +96,13 @@ fun getRouteMapURL(geoPoints: MutableList<List<Double>>): String {
     val encodedURL = "https://static.maps.2gis.com/1.0?s=880x450&z=&g=${URLEncoder.encode(json, "UTF-8")}"
     println("Map URL: $encodedURL")
     return encodedURL
+}
+
+fun getRouteDistance(geoPoints: MutableList<List<Double>>): Double {
+    var routeDistance = 0.0
+    for (i in 0 until geoPoints.size - 1){
+        routeDistance += Haversine().getDistance(geoPoints[i][0], geoPoints[i][1], geoPoints[i+1][0], geoPoints[i+1][1])
+    }
+    println("Total distance: $routeDistance")
+    return routeDistance
 }

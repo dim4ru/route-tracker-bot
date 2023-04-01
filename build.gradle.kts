@@ -18,6 +18,8 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation("dev.inmo:tgbotapi:7.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    testImplementation(
+        "io.kotest:kotest-runner-junit5-jvm:5.5.5")
 }
 
 tasks.test {
@@ -36,3 +38,6 @@ ktor {
         archiveFileName.set("rtb.jar")
     }
 }
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform() }
