@@ -1,28 +1,25 @@
 @file:OptIn(RiskFeature::class)
 
-import dev.inmo.micro_utils.coroutines.subscribe
-import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
+import dev.inmo.tgbotapi.extensions.api.edit.edit
 import dev.inmo.tgbotapi.extensions.api.send.media.sendPhoto
 import dev.inmo.tgbotapi.extensions.api.send.reply
+import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.api.telegramBot
 import dev.inmo.tgbotapi.extensions.behaviour_builder.buildBehaviourWithLongPolling
 import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onCommand
 import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onEditedContentMessage
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onEditedLocation
 import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onLiveLocation
 import dev.inmo.tgbotapi.extensions.utils.extensions.raw.location
 import dev.inmo.tgbotapi.requests.abstracts.InputFile
+import dev.inmo.tgbotapi.types.ChatIdentifier
 import dev.inmo.tgbotapi.types.IdChatIdentifier
-import dev.inmo.tgbotapi.types.location.LiveLocation
+import dev.inmo.tgbotapi.types.MessageId
 import dev.inmo.tgbotapi.types.message.content.StaticLocationContent
 import dev.inmo.tgbotapi.utils.RiskFeature
-import io.ktor.http.ContentType.Application.Json
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import java.io.FileInputStream
 import java.io.InputStream
@@ -41,6 +38,7 @@ val bot = telegramBot(TOKEN)
 suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         val geoPoints: MutableList<List<Double>> = mutableListOf() // long, lat
+        var statisticsMessageId: MessageId = 0
         println(getMe())
 
         onCommand("start") {
@@ -52,6 +50,7 @@ suspend fun main() {
             val long = it.location!!.longitude
             println("Tracking started")
             saveLocation(geoPoints, lat, long)
+            statisticsMessageId = bot.sendTextMessage(it.chat.id, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км").messageId
         }
         // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
@@ -60,12 +59,13 @@ suspend fun main() {
             // If life location is active
             if (it.content !is StaticLocationContent) {
                 saveLocation(geoPoints, lat, long)
+                updateStatisticsMessage(it.chat.id, statisticsMessageId, geoPoints)
             } else {
                 bot.sendPhoto(
                     IdChatIdentifier(it.chat.id.chatId),
                     InputFile.fromUrl(getRouteMapURL(geoPoints))
                 )
-                reply(it, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км")
+                //reply(it, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км")
                 geoPoints.clear()
             }
         }
@@ -82,12 +82,7 @@ fun getCurrentISOTime(): String {
 }
 
 fun saveLocation(geoPoints: MutableList<List<Double>>, lat: Double, long: Double) {
-    geoPoints.add(
-        listOf(
-            long,
-            lat
-        )
-    ) // Order is inverse becsuse 2gis API requires coordinates in format longitude, latitude
+    geoPoints.add(listOf(long, lat)) // Order is inverse becsuse 2gis API requires coordinates in format longitude, latitude
     println("Added: ${listOf(long, lat)} (${geoPoints.count()})")
 }
 
@@ -100,9 +95,19 @@ fun getRouteMapURL(geoPoints: MutableList<List<Double>>): String {
 
 fun getRouteDistance(geoPoints: MutableList<List<Double>>): Double {
     var routeDistance = 0.0
-    for (i in 0 until geoPoints.size - 1){
-        routeDistance += Haversine().getDistance(geoPoints[i][0], geoPoints[i][1], geoPoints[i+1][0], geoPoints[i+1][1])
+    for (i in 0 until geoPoints.size - 1) {
+        routeDistance += Haversine().getDistance(
+            geoPoints[i][0],
+            geoPoints[i][1],
+            geoPoints[i + 1][0],
+            geoPoints[i + 1][1]
+        )
     }
     println("Total distance: $routeDistance")
     return routeDistance
+}
+
+suspend fun updateStatisticsMessage(chatId: ChatIdentifier, messageId: MessageId, geoPoints: MutableList<List<Double>>) {
+    bot.edit(chatId, messageId, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км")
+    println("Total distance updated: ${String.format("%.3f", getRouteDistance(geoPoints))}")
 }

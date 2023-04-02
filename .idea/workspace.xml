@@ -9,13 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.2.5 bot token hidden">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Haversine.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/getDistanceTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/getRouteDistanceTest.kt" afterDir="false" />
+    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.3.0 Total distance is now calculated with the haversine and rounded to the nearest thousandth. Calculation functions (getDistance, getRouteDistance) are tested.">
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/UpdateStatisticsMessageTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/getDistanceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/GetDistanceTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/getRouteDistanceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/GetRouteDistanceTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +114,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="UpdateStatisticsMessageTest: Editing a message after a location is added" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
+      <module name="route-tracker-bot.test" />
+      <option name="jrePath" value="" />
+      <option name="jrePathEnabled" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$MODULE_WORKING_DIR$" />
+      <option name="programParameters" value="" />
+      <option name="specName" value="UpdateStatisticsMessageTest" />
+      <option name="testPath" value="Editing a message after a location is added" />
+      <option name="packageName" value="" />
+      <option name="vmparams" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="getDistanceTest: Distance between two points calculated with the haversine" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
       <module name="route-tracker-bot.test" />
       <option name="jrePath" value="" />
@@ -179,7 +193,9 @@
       <workItem from="1680022521381" duration="5882000" />
       <workItem from="1680097167508" duration="12339000" />
       <workItem from="1680238000944" duration="229000" />
-      <workItem from="1680278385341" duration="8038000" />
+      <workItem from="1680278385341" duration="9893000" />
+      <workItem from="1680411841123" duration="273000" />
+      <workItem from="1680441088057" duration="4324000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1 TelegramBotAPI dependency added">
       <created>1678985102670</created>
@@ -265,7 +281,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680183079191</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="0.3.0 Total distance is now calculated with the haversine and rounded to the nearest thousandth. Calculation functions (getDistance, getRouteDistance) are tested.">
+      <created>1680370028248</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1680370028248</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -297,6 +320,7 @@
     <MESSAGE value="0.2.2 GeoJSON serialization, but only coordinates are serialized, &quot;LineString&quot; is ignored" />
     <MESSAGE value="0.2.3 Coordinates are serialized in the format required by the 2gis API (long,lat)" />
     <MESSAGE value="0.2.5 bot token hidden" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.2.5 bot token hidden" />
+    <MESSAGE value="0.3.0 Total distance is now calculated with the haversine and rounded to the nearest thousandth. Calculation functions (getDistance, getRouteDistance) are tested." />
+    <option name="LAST_COMMIT_MESSAGE" value="0.3.0 Total distance is now calculated with the haversine and rounded to the nearest thousandth. Calculation functions (getDistance, getRouteDistance) are tested." />
   </component>
 </project>
