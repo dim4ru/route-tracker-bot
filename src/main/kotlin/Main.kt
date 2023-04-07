@@ -36,6 +36,8 @@ val TOKEN = readTelegramBotToken()
 val bot = telegramBot(TOKEN)
 
 suspend fun main() {
+    var lat: Double?
+    var long: Double?
     bot.buildBehaviourWithLongPolling {
         val geoPoints: MutableList<List<Double>> = mutableListOf() // long, lat
         var statisticsMessageId: MessageId = 0
@@ -46,26 +48,26 @@ suspend fun main() {
         }
         // On live location start
         onLiveLocation {
-            val lat = it.location!!.latitude
-            val long = it.location!!.longitude
+            lat = it.location!!.latitude
+            long = it.location!!.longitude
             println("Tracking started")
-            saveLocation(geoPoints, lat, long)
+            saveLocation(geoPoints, lat!!, long!!)
             statisticsMessageId = bot.sendTextMessage(it.chat.id, printRouteDistance(geoPoints)).messageId
         }
         // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
-            val lat = it.location!!.latitude
-            val long = it.location!!.longitude
+            lat = it.location!!.latitude
+            long = it.location!!.longitude
             // If life location is active
             if (it.content !is StaticLocationContent) {
-                saveLocation(geoPoints, lat, long)
+                saveLocation(geoPoints, lat!!, long!!)
                 updateStatisticsMessage(it.chat.id, statisticsMessageId, geoPoints)
             } else {
+                // End tracking
                 bot.sendPhoto(
                     IdChatIdentifier(it.chat.id.chatId),
                     InputFile.fromUrl(getRouteMapURL(geoPoints))
                 )
-                //reply(it, printRouteDistance(geoPoints))
                 geoPoints.clear()
             }
         }
