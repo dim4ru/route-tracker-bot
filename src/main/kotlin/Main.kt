@@ -50,7 +50,7 @@ suspend fun main() {
             val long = it.location!!.longitude
             println("Tracking started")
             saveLocation(geoPoints, lat, long)
-            statisticsMessageId = bot.sendTextMessage(it.chat.id, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км").messageId
+            statisticsMessageId = bot.sendTextMessage(it.chat.id, printRouteDistance(geoPoints)).messageId
         }
         // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
@@ -65,7 +65,7 @@ suspend fun main() {
                     IdChatIdentifier(it.chat.id.chatId),
                     InputFile.fromUrl(getRouteMapURL(geoPoints))
                 )
-                //reply(it, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км")
+                //reply(it, printRouteDistance(geoPoints))
                 geoPoints.clear()
             }
         }
@@ -108,6 +108,10 @@ fun getRouteDistance(geoPoints: MutableList<List<Double>>): Double {
 }
 
 suspend fun updateStatisticsMessage(chatId: ChatIdentifier, messageId: MessageId, geoPoints: MutableList<List<Double>>) {
-    bot.edit(chatId, messageId, "Пройденное расстояние: ${String.format("%.3f", getRouteDistance(geoPoints))} км")
-    println("Total distance updated: ${String.format("%.3f", getRouteDistance(geoPoints))}")
+    bot.edit(chatId, messageId, printRouteDistance(geoPoints))
+    println("Total distance updated: ${printRouteDistance(geoPoints)}")
+}
+
+fun printRouteDistance (geoPoints: MutableList<List<Double>>): String{
+    return "Пройденное расстояние: " + String.format("%.3f", getRouteDistance(geoPoints)) + "км"
 }
