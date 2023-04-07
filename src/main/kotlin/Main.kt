@@ -40,7 +40,7 @@ suspend fun main() {
     var long: Double?
     bot.buildBehaviourWithLongPolling {
         val geoPoints: MutableList<List<Double>> = mutableListOf() // long, lat
-        var statisticsMessageId: MessageId = 0
+        var statisticsMessageId: MessageId? = null
         println(getMe())
 
         onCommand("start") {
@@ -48,11 +48,11 @@ suspend fun main() {
         }
         // On live location start
         onLiveLocation {
+            statisticsMessageId = bot.sendTextMessage(it.chat.id, printRouteDistance(geoPoints)).messageId
             lat = it.location!!.latitude
             long = it.location!!.longitude
             println("Tracking started")
             saveLocation(geoPoints, lat!!, long!!)
-            statisticsMessageId = bot.sendTextMessage(it.chat.id, printRouteDistance(geoPoints)).messageId
         }
         // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
@@ -61,7 +61,9 @@ suspend fun main() {
             // If life location is active
             if (it.content !is StaticLocationContent) {
                 saveLocation(geoPoints, lat!!, long!!)
-                updateStatisticsMessage(it.chat.id, statisticsMessageId, geoPoints)
+                if (statisticsMessageId != null){
+                    updateStatisticsMessage(it.chat.id, statisticsMessageId, geoPoints)
+                }
             } else {
                 // End tracking
                 bot.sendPhoto(
@@ -69,6 +71,7 @@ suspend fun main() {
                     InputFile.fromUrl(getRouteMapURL(geoPoints))
                 )
                 geoPoints.clear()
+                statisticsMessageId = null
             }
         }
 
@@ -109,8 +112,8 @@ fun getRouteDistance(geoPoints: MutableList<List<Double>>): Double {
     return routeDistance
 }
 
-suspend fun updateStatisticsMessage(chatId: ChatIdentifier, messageId: MessageId, geoPoints: MutableList<List<Double>>) {
-    bot.edit(chatId, messageId, printRouteDistance(geoPoints))
+suspend fun updateStatisticsMessage(chatId: ChatIdentifier, messageId: MessageId?, geoPoints: MutableList<List<Double>>) {
+    bot.edit(chatId, messageId!!, printRouteDistance(geoPoints))
     println("Total distance updated: ${printRouteDistance(geoPoints)}")
 }
 

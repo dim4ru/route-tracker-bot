@@ -213,7 +213,7 @@
       <workItem from="1680541042137" duration="783000" />
       <workItem from="1680542263387" duration="613000" />
       <workItem from="1680573726465" duration="52000" />
-      <workItem from="1680880932798" duration="1137000" />
+      <workItem from="1680880932798" duration="1783000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1 TelegramBotAPI dependency added">
       <created>1678985102670</created>
@@ -320,7 +320,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680881800339</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="0.3.3 Refactoring">
+      <created>1680882077048</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1680882077048</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
