@@ -1,5 +1,6 @@
 @file:OptIn(RiskFeature::class)
 
+import dev.inmo.micro_utils.coroutines.subscribe
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.edit.edit
 import dev.inmo.tgbotapi.extensions.api.send.media.sendPhoto
