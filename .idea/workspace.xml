@@ -9,10 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.3.5 Refactoring, HD map quality">
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/PhotoMessageUpdateTest.kt" afterDir="false" />
+    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.4.0 Testing photo message updates">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/PhotoMessageUpdateTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/PhotoMessageUpdateTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,13 +66,16 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.1642925&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.26765376&quot;
+    &quot;project.structure.side.proportion&quot;: &quot;0.26765376&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
-  <component name="RunManager" selected="Kotest.EditCaptionTest: Edit caption to photo">
+  <component name="RunManager" selected="Kotest.PhotoMessageUpdateTest: Replace photo">
     <configuration name="EditCaptionTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -88,6 +90,29 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;EditCaptionTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="PhotoMessageUpdateTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;PhotoMessageUpdateTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -165,6 +190,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PhotoMessageUpdateTest: Replace photo" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
+      <module name="route-tracker-bot.test" />
+      <option name="jrePath" value="" />
+      <option name="jrePathEnabled" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$MODULE_WORKING_DIR$" />
+      <option name="programParameters" value="" />
+      <option name="specName" value="PhotoMessageUpdateTest" />
+      <option name="testPath" value="Replace photo" />
+      <option name="packageName" value="" />
+      <option name="vmparams" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="UpdateStatisticsMessageTest: Editing a message after a location is added" type="ioKotest" factoryName="Kotest" defaultName="singleModule">
       <module name="route-tracker-bot.test" />
       <option name="jrePath" value="" />
@@ -227,6 +267,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.PhotoMessageUpdateTest" />
         <item itemvalue="Gradle.EditCaptionTest" />
         <item itemvalue="Kotlin.MainKt" />
       </list>
@@ -256,7 +297,15 @@
       <workItem from="1680880932798" duration="6015000" />
       <workItem from="1680942835318" duration="1144000" />
       <workItem from="1681184928938" duration="330000" />
-      <workItem from="1681187224412" duration="2579000" />
+      <workItem from="1681187224412" duration="2632000" />
+      <workItem from="1681214917508" duration="334000" />
+      <workItem from="1681216300306" duration="62000" />
+      <workItem from="1681219713850" duration="665000" />
+      <workItem from="1681227426729" duration="146000" />
+      <workItem from="1681403848437" duration="274000" />
+      <workItem from="1681643418812" duration="55000" />
+      <workItem from="1682007865980" duration="106000" />
+      <workItem from="1682315515934" duration="2833000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1 TelegramBotAPI dependency added">
       <created>1678985102670</created>
@@ -384,7 +433,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680886529472</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="0.4.0 Testing photo message updates">
+      <created>1681189859399</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1681189859400</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -422,6 +478,7 @@
     <MESSAGE value="0.3.3 Refactoring" />
     <MESSAGE value="0.3.4 Bugfix &amp; refactoring" />
     <MESSAGE value="0.3.5 Refactoring, HD map quality" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.3.5 Refactoring, HD map quality" />
+    <MESSAGE value="0.4.0 Testing photo message updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.4.0 Testing photo message updates" />
   </component>
 </project>
