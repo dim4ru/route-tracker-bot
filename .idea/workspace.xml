@@ -9,8 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.4.0 Testing photo message updates">
+    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.4.2 Route map is now being sent at the beginning of tracking and updated every 10th saved geo point">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/PhotoMessageUpdateTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/PhotoMessageUpdateTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -75,7 +76,7 @@
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
-  <component name="RunManager" selected="Kotest.PhotoMessageUpdateTest: Replace photo">
+  <component name="RunManager" selected="Kotlin.MainKt">
     <configuration name="EditCaptionTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -267,9 +268,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Kotlin.MainKt" />
         <item itemvalue="Gradle.PhotoMessageUpdateTest" />
         <item itemvalue="Gradle.EditCaptionTest" />
-        <item itemvalue="Kotlin.MainKt" />
       </list>
     </recent_temporary>
   </component>
@@ -305,7 +306,7 @@
       <workItem from="1681403848437" duration="274000" />
       <workItem from="1681643418812" duration="55000" />
       <workItem from="1682007865980" duration="106000" />
-      <workItem from="1682315515934" duration="2833000" />
+      <workItem from="1682315515934" duration="5225000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1 TelegramBotAPI dependency added">
       <created>1678985102670</created>
@@ -440,7 +441,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681189859400</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="0.4.1 Tested photo message update feature">
+      <created>1682318719128</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1682318719128</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,6 +487,8 @@
     <MESSAGE value="0.3.4 Bugfix &amp; refactoring" />
     <MESSAGE value="0.3.5 Refactoring, HD map quality" />
     <MESSAGE value="0.4.0 Testing photo message updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.4.0 Testing photo message updates" />
+    <MESSAGE value="0.4.1 Tested photo message update feature" />
+    <MESSAGE value="0.4.2 Route map is now being sent at the beginning of tracking and updated every 10th saved geo point" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.4.2 Route map is now being sent at the beginning of tracking and updated every 10th saved geo point" />
   </component>
 </project>

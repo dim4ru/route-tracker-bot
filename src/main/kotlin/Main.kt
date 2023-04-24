@@ -3,6 +3,7 @@
 import dev.inmo.micro_utils.coroutines.subscribe
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.edit.edit
+import dev.inmo.tgbotapi.extensions.api.edit.media.editMessageMedia
 import dev.inmo.tgbotapi.extensions.api.send.media.sendPhoto
 import dev.inmo.tgbotapi.extensions.api.send.reply
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
@@ -16,6 +17,9 @@ import dev.inmo.tgbotapi.requests.abstracts.InputFile
 import dev.inmo.tgbotapi.types.ChatIdentifier
 import dev.inmo.tgbotapi.types.IdChatIdentifier
 import dev.inmo.tgbotapi.types.MessageId
+import dev.inmo.tgbotapi.types.media.TelegramMediaPhoto
+import dev.inmo.tgbotapi.types.message.abstracts.ContentMessage
+import dev.inmo.tgbotapi.types.message.content.PhotoContent
 import dev.inmo.tgbotapi.types.message.content.StaticLocationContent
 import dev.inmo.tgbotapi.utils.RiskFeature
 import java.time.LocalDateTime
@@ -42,6 +46,7 @@ suspend fun main() {
         var geoJSON = GeoJSON()
         //val geoPoints: MutableList<List<Double>> = mutableListOf() // long, lat
         var statisticsMessageId: MessageId? = null
+        var mapMessage: ContentMessage<PhotoContent>? = null
         println(getMe())
 
         onCommand("start") {
@@ -54,6 +59,11 @@ suspend fun main() {
             long = it.location!!.longitude
             println("Tracking started")
             saveLocation(geoJSON.geoPoints, lat!!, long!!)
+            mapMessage = bot.sendPhoto(
+                IdChatIdentifier(it.chat.id.chatId),
+                InputFile.fromUrl(getRouteMapURL(geoJSON))
+            )
+
         }
         // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
@@ -62,19 +72,20 @@ suspend fun main() {
             // If life location is active
             if (it.content !is StaticLocationContent) {
                 saveLocation(geoJSON.geoPoints, lat!!, long!!)
-                if (statisticsMessageId != null){
+                if (statisticsMessageId != null) {
                     updateStatisticsMessage(it.chat.id, statisticsMessageId, geoJSON.geoPoints)
+                }
+                if (geoJSON.geoPoints.size % 10 == 0) {
+                    updateRouteMap(mapMessage!!, geoJSON)
                 }
             } else {
                 // End tracking
-                bot.sendPhoto(
-                    IdChatIdentifier(it.chat.id.chatId),
-                    InputFile.fromUrl(getRouteMapURL(geoJSON))
-                )
+                updateRouteMap(mapMessage!!, geoJSON)
                 geoJSON.geoPoints = mutableListOf()
                 statisticsMessageId = null
             }
         }
+        // updateRouteMap(mapMessage!!, geoJSON) <--?
 
         //allUpdatesFlow.subscribe(this) { println(it) }
     }.join()
@@ -92,13 +103,17 @@ fun saveLocation(geoPoints: MutableList<List<Double>>, lat: Double, long: Double
     println("Added: ${listOf(long, lat)} (${geoPoints.count()})")
 }
 
-suspend fun updateStatisticsMessage(chatId: ChatIdentifier, messageId: MessageId?, geoPoints: MutableList<List<Double>>) {
+suspend fun updateStatisticsMessage(
+    chatId: ChatIdentifier,
+    messageId: MessageId?,
+    geoPoints: MutableList<List<Double>>
+) {
     bot.edit(chatId, messageId!!, printRouteDistance(geoPoints))
     println("Distance updated: " + String.format("%.3f", getRouteDistance(geoPoints)))
 }
 
 
-fun printRouteDistance (geoPoints: MutableList<List<Double>>): String{
+fun printRouteDistance(geoPoints: MutableList<List<Double>>): String {
     return "Пройденное расстояние: " + String.format("%.3f", getRouteDistance(geoPoints)) + "км"
 }
 
@@ -120,4 +135,12 @@ fun getRouteMapURL(geoJSON: GeoJSON): String {
     val encodedURL = "https://static.maps.2gis.com/1.0?s=880x450@2x&z=&g=${URLEncoder.encode(geoJSON.serializeToGeoJSON(), "UTF-8")}"
     println("Map URL: $encodedURL")
     return encodedURL
+}
+
+suspend fun updateRouteMap(message: ContentMessage<PhotoContent>, geoJSON: GeoJSON) {
+    bot.editMessageMedia(
+        message = message,
+        media = TelegramMediaPhoto(file = InputFile.fromUrl(getRouteMapURL(geoJSON)))
+    )
+    println("Map updated")
 }

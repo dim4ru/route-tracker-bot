@@ -25,7 +25,10 @@ class PhotoMessageUpdateTest : StringSpec({
                 id,
                 InputFile.fromUrl("https://yt3.googleusercontent.com/umigHrIECcGghXOyOb73g0gGPbV164TDoL5xQ5j8RE-O84eXpHW8SDn3eBZDSiloZWnNRU5Br4Q=s900-c-k-c0x00ffffff-no-rj")
             )
-            bot.editMessageMedia(message=message, media = TelegramMediaPhoto(file = InputFile.fromUrl("https://i1.sndcdn.com/artworks-CyTzk0PMsjHFfr7D-S8wWcw-t500x500.jpg")))
+            bot.editMessageMedia(
+                message = message,
+                media = TelegramMediaPhoto(file = InputFile.fromUrl("https://i1.sndcdn.com/artworks-CyTzk0PMsjHFfr7D-S8wWcw-t500x500.jpg"))
+            )
         }
     }
 })
