@@ -1,6 +1,5 @@
 @file:OptIn(RiskFeature::class)
 
-import dev.inmo.micro_utils.coroutines.subscribe
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.edit.edit
 import dev.inmo.tgbotapi.extensions.api.edit.media.editMessageMedia
@@ -75,17 +74,17 @@ suspend fun main() {
                 if (statisticsMessageId != null) {
                     updateStatisticsMessage(it.chat.id, statisticsMessageId, geoJSON.geoPoints)
                 }
+                // Map update on every 10th point
                 if (geoJSON.geoPoints.size % 10 == 0) {
                     updateRouteMap(mapMessage!!, geoJSON)
                 }
             } else {
                 // End tracking
-                updateRouteMap(mapMessage!!, geoJSON)
+                updateRouteMap(mapMessage!!, geoJSON, false)
                 geoJSON.geoPoints = mutableListOf()
                 statisticsMessageId = null
             }
         }
-        // updateRouteMap(mapMessage!!, geoJSON) <--?
 
         //allUpdatesFlow.subscribe(this) { println(it) }
     }.join()
@@ -131,16 +130,26 @@ fun getRouteDistance(geoPoints: MutableList<List<Double>>): Double {
     return routeDistance
 }
 
-fun getRouteMapURL(geoJSON: GeoJSON): String {
-    val encodedURL = "https://static.maps.2gis.com/1.0?s=880x450@2x&z=&g=${URLEncoder.encode(geoJSON.serializeToGeoJSON(), "UTF-8")}"
-    println("Map URL: $encodedURL")
-    return encodedURL
+fun getRouteMapURL(geoJSON: GeoJSON, showLast: Boolean = true): String {
+    val geoJSONString = geoJSON.serializeToGeoJSON().encodeToURL()
+    val lastPoint = (geoJSON.geoPoints.last().toList().apply { apply { Collections.swap(this, 0, 1) } }).joinToString(",")
+
+    // If tracking is in process, send map with point, else just a line
+    val url = if (showLast) {
+        "https://static.maps.2gis.com/1.0?s=880x450@2x&z=&pt=${lastPoint}~k:c~c:be~s:l&g=$geoJSONString"
+    } else {
+        "https://static.maps.2gis.com/1.0?s=880x450@2x&z=&g=$geoJSONString"
+    }
+    println("Map URL: $url")
+    return url
 }
 
-suspend fun updateRouteMap(message: ContentMessage<PhotoContent>, geoJSON: GeoJSON) {
+fun String.encodeToURL(): String = URLEncoder.encode(this, "UTF-8")
+
+suspend fun updateRouteMap(message: ContentMessage<PhotoContent>, geoJSON: GeoJSON, showLast: Boolean = true) {
     bot.editMessageMedia(
         message = message,
-        media = TelegramMediaPhoto(file = InputFile.fromUrl(getRouteMapURL(geoJSON)))
+        media = TelegramMediaPhoto(file = InputFile.fromUrl(getRouteMapURL(geoJSON, showLast)))
     )
     println("Map updated")
 }
