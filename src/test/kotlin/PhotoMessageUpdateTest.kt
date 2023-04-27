@@ -31,4 +31,21 @@ class PhotoMessageUpdateTest : StringSpec({
             )
         }
     }
+    "Update route map" {
+        bot.buildBehaviourWithLongPolling {
+            val geoPoints: MutableList<List<Double>> = mutableListOf(
+                listOf(73.385541, 54.968875),
+                listOf(73.385723, 54.968203),
+                listOf(73.390598, 54.968447),
+                listOf(73.390904, 54.967077),
+                listOf(73.392136, 54.965436),
+                listOf(73.396102, 54.965850)
+            )
+            val message = bot.sendPhoto(
+                ChatId(chatId = 509933088),
+                InputFile.fromUrl("https://yt3.googleusercontent.com/umigHrIECcGghXOyOb73g0gGPbV164TDoL5xQ5j8RE-O84eXpHW8SDn3eBZDSiloZWnNRU5Br4Q=s900-c-k-c0x00ffffff-no-rj")
+            )
+            updateRouteMap(message = message, GeoJSON(geoPoints = geoPoints), showLast = false)
+        }
+    }
 })

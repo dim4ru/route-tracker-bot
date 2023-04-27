@@ -1,23 +1,20 @@
 @file:OptIn(RiskFeature::class)
 
+import dev.inmo.micro_utils.coroutines.subscribe
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
-import dev.inmo.tgbotapi.extensions.api.edit.edit
+import dev.inmo.tgbotapi.extensions.api.edit.caption.editMessageCaption
 import dev.inmo.tgbotapi.extensions.api.edit.media.editMessageMedia
 import dev.inmo.tgbotapi.extensions.api.send.media.sendPhoto
 import dev.inmo.tgbotapi.extensions.api.send.reply
-import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.api.telegramBot
 import dev.inmo.tgbotapi.extensions.behaviour_builder.buildBehaviourWithLongPolling
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onCommand
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onEditedContentMessage
-import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.onLiveLocation
+import dev.inmo.tgbotapi.extensions.behaviour_builder.triggers_handling.*
 import dev.inmo.tgbotapi.extensions.utils.extensions.raw.location
 import dev.inmo.tgbotapi.requests.abstracts.InputFile
-import dev.inmo.tgbotapi.types.ChatIdentifier
-import dev.inmo.tgbotapi.types.IdChatIdentifier
 import dev.inmo.tgbotapi.types.MessageId
 import dev.inmo.tgbotapi.types.media.TelegramMediaPhoto
 import dev.inmo.tgbotapi.types.message.abstracts.ContentMessage
+import dev.inmo.tgbotapi.types.message.content.LiveLocationContent
 import dev.inmo.tgbotapi.types.message.content.PhotoContent
 import dev.inmo.tgbotapi.types.message.content.StaticLocationContent
 import dev.inmo.tgbotapi.utils.RiskFeature
@@ -42,10 +39,8 @@ suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         var lat: Double?
         var long: Double?
-        var geoJSON = GeoJSON()
-        //val geoPoints: MutableList<List<Double>> = mutableListOf() // long, lat
-        var statisticsMessageId: MessageId? = null
-        var mapMessage: ContentMessage<PhotoContent>? = null
+        val geoJSON = GeoJSON()
+        var statisticsMessage: ContentMessage<PhotoContent>? = null
         println(getMe())
 
         onCommand("start") {
@@ -53,36 +48,27 @@ suspend fun main() {
         }
         // On live location start
         onLiveLocation {
-            statisticsMessageId = bot.sendTextMessage(it.chat.id, printRouteDistance(geoJSON.geoPoints)).messageId
             lat = it.location!!.latitude
             long = it.location!!.longitude
             println("Tracking started")
             saveLocation(geoJSON.geoPoints, lat!!, long!!)
-            mapMessage = bot.sendPhoto(
-                IdChatIdentifier(it.chat.id.chatId),
-                InputFile.fromUrl(getRouteMapURL(geoJSON))
-            )
-
+            statisticsMessage = sendPhoto(it.chat.id, InputFile.fromUrl(getRouteMapURL(geoJSON)),"Началась запись маршрута")
         }
         // On live location update and ending (expiration and stop by user)
         onEditedContentMessage {
             lat = it.location!!.latitude
             long = it.location!!.longitude
             // If life location is active
-            if (it.content !is StaticLocationContent) {
+            if (it.content is LiveLocationContent) {
                 saveLocation(geoJSON.geoPoints, lat!!, long!!)
-                if (statisticsMessageId != null) {
-                    updateStatisticsMessage(it.chat.id, statisticsMessageId, geoJSON.geoPoints)
-                }
-                // Map update on every 10th point
-                if (geoJSON.geoPoints.size % 10 == 0) {
-                    updateRouteMap(mapMessage!!, geoJSON)
+                if (statisticsMessage != null) {
+                    updateStatisticsMessage(statisticsMessage!!, geoJSON)
                 }
             } else {
                 // End tracking
-                updateRouteMap(mapMessage!!, geoJSON, false)
+                updateStatisticsMessage(statisticsMessage!!, geoJSON, false)
                 geoJSON.geoPoints = mutableListOf()
-                statisticsMessageId = null
+                statisticsMessage = null
             }
         }
 
@@ -103,12 +89,17 @@ fun saveLocation(geoPoints: MutableList<List<Double>>, lat: Double, long: Double
 }
 
 suspend fun updateStatisticsMessage(
-    chatId: ChatIdentifier,
-    messageId: MessageId?,
-    geoPoints: MutableList<List<Double>>
+    message: ContentMessage<PhotoContent>,
+    geoJSON: GeoJSON,
+    showLast: Boolean = true
 ) {
-    bot.edit(chatId, messageId!!, printRouteDistance(geoPoints))
-    println("Distance updated: " + String.format("%.3f", getRouteDistance(geoPoints)))
+    println("Distance updated: " + String.format("%.3f", getRouteDistance(geoJSON.geoPoints)))
+
+    // Map update on every 10th point
+    if (geoJSON.geoPoints.size % 10 == 0 || !showLast) {
+        updateRouteMap(message, geoJSON, showLast)
+    }
+    bot.editMessageCaption(message.chat.id, message.messageId, printRouteDistance(geoJSON.geoPoints))
 }
 
 
@@ -126,7 +117,6 @@ fun getRouteDistance(geoPoints: MutableList<List<Double>>): Double {
             geoPoints[i + 1][1]
         )
     }
-    println("Total distance: $routeDistance")
     return routeDistance
 }
 
