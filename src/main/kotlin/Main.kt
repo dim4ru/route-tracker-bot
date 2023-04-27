@@ -39,7 +39,7 @@ suspend fun main() {
     bot.buildBehaviourWithLongPolling {
         var lat: Double?
         var long: Double?
-        val geoJSON = GeoJSON()
+        val UserTrack = Track()
         var statisticsMessage: ContentMessage<PhotoContent>? = null
         println(getMe())
 
@@ -51,7 +51,7 @@ suspend fun main() {
             lat = it.location!!.latitude
             long = it.location!!.longitude
             println("Tracking started")
-            saveLocation(geoJSON.geoPoints, lat!!, long!!)
+            saveLocation(UserTrack, lat!!, long!!)
             statisticsMessage = sendPhoto(it.chat.id, InputFile.fromUrl(getRouteMapURL(geoJSON)),"Началась запись маршрута")
         }
         // On live location update and ending (expiration and stop by user)
@@ -69,6 +69,7 @@ suspend fun main() {
                 updateStatisticsMessage(statisticsMessage!!, geoJSON, false)
                 geoJSON.geoPoints = mutableListOf()
                 statisticsMessage = null
+                println("Tracking finished")
             }
         }
 
@@ -83,9 +84,9 @@ fun getCurrentISOTime(): String {
     return isoDateTime!!
 }
 
-fun saveLocation(geoPoints: MutableList<List<Double>>, lat: Double, long: Double) {
-    geoPoints.add(listOf(long, lat)) // Order is inverse becsuse 2gis API requires coordinates in format longitude, latitude
-    println("Added: ${listOf(long, lat)} (${geoPoints.count()})")
+fun saveLocation(userTrack: Track, lat: Double, long: Double) {
+    userTrack.coordinates.add(Coordinates(lat,long)) // Order is inverse becsuse 2gis API requires coordinates in format longitude, latitude
+    println("Added: ${listOf(long, lat)} (${userTrack.coordinates.count()})")
 }
 
 suspend fun updateStatisticsMessage(
@@ -120,10 +121,9 @@ fun getRouteDistance(geoPoints: MutableList<List<Double>>): Double {
     return routeDistance
 }
 
-fun getRouteMapURL(geoJSON: GeoJSON, showLast: Boolean = true): String {
-    val geoJSONString = geoJSON.serializeToGeoJSON().encodeToURL()
-    val lastPoint = (geoJSON.geoPoints.last().toList().apply { apply { Collections.swap(this, 0, 1) } }).joinToString(",")
-
+fun getRouteMapURL(userTrack: Track, showLast: Boolean = true): String {
+    val geoJSONString = GeoJSON(coordinates = userTrack.coordinates).serializeToGeoJSON().encodeToURL()
+    val lastPoint = userTrack.coordinates.last().joinToString {  }
     // If tracking is in process, send map with point, else just a line
     val url = if (showLast) {
         "https://static.maps.2gis.com/1.0?s=880x450@2x&z=&pt=${lastPoint}~k:c~c:be~s:l&g=$geoJSONString"

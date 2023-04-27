@@ -9,10 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.4.3 Now if tracking is in process, send map is sent with route line and current location point, at the end of tracking map is sent with just route line. Map update is broken.">
+    <list default="true" id="5ca6434b-f17c-4409-9b7e-d3ee112b8e88" name="Changes" comment="0.4.4 Map and distance is now in single message with updated caption. Bugfix (correct map update) &amp; refactoring.">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Coordinates.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Track.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/GeoJSON.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/GeoJSON.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/PhotoMessageUpdateTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/PhotoMessageUpdateTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +78,7 @@
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Gradle.EditCaptionTest">
     <configuration name="EditCaptionTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -339,7 +341,9 @@
       <workItem from="1682315515934" duration="5400000" />
       <workItem from="1682395613093" duration="5000" />
       <workItem from="1682522991931" duration="9182000" />
-      <workItem from="1682582024614" duration="6961000" />
+      <workItem from="1682582024614" duration="7184000" />
+      <workItem from="1682590367844" duration="499000" />
+      <workItem from="1682596244609" duration="4502000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1 TelegramBotAPI dependency added">
       <created>1678985102670</created>
@@ -495,7 +499,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682533598688</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="0.4.4 Map and distance is now in single message with updated caption. Bugfix (correct map update) &amp; refactoring.">
+      <created>1682589317171</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1682589317171</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -513,7 +524,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="0.0.1 TelegramBotAPI dependency added" />
     <MESSAGE value="0.0.4 Updating Live Location coordinates" />
     <MESSAGE value="0.1.0 Coordinates are stored in a list" />
     <MESSAGE value="0.1.1 Location expiration check added into checkLocation()" />
@@ -538,6 +548,7 @@
     <MESSAGE value="0.4.2 Route map is now being sent at the beginning of tracking and updated every 10th saved geo point" />
     <MESSAGE value="0.4.2 Route map is now being sent at the beginning of tracking and updated every 10th saved geo point and at the end of tracking" />
     <MESSAGE value="0.4.3 Now if tracking is in process, send map is sent with route line and current location point, at the end of tracking map is sent with just route line. Map update is broken." />
-    <option name="LAST_COMMIT_MESSAGE" value="0.4.3 Now if tracking is in process, send map is sent with route line and current location point, at the end of tracking map is sent with just route line. Map update is broken." />
+    <MESSAGE value="0.4.4 Map and distance is now in single message with updated caption. Bugfix (correct map update) &amp; refactoring." />
+    <option name="LAST_COMMIT_MESSAGE" value="0.4.4 Map and distance is now in single message with updated caption. Bugfix (correct map update) &amp; refactoring." />
   </component>
 </project>
